@@ -1,303 +1,117 @@
 from selenium import webdriver
-import pyautogui
-import time
-from selenium.webdriver import Keys, ActionChains
-from openpyxl import load_workbook
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome()
-driver.maximize_window()
+from time import sleep
+import json
+from pathlib import Path
 
-#acessar o ERP
-driver.get("https://erp.correios.com.br")
-time.sleep(5)
-#login e senha no ERP, clicar para acessar o sistema
-login_erp = driver.find_element("xpath", '//*[@id="User"]').send_keys('80873138')
-time.sleep(1)
-senha_erp = driver.find_element("xpath", '//*[@id="Password"]').send_keys('senha')
-time.sleep(1)
-click_erp = driver.find_element("xpath", '/html/body/div/table/tbody/tr[2]/td/form/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[7]/td/input').click()
-time.sleep(15)
-#acessar o atalho de fechamento em lote
-click_atalho = driver.find_element("xpath", '//*[@id="filter_tileImg_fav_8AB53D70_EFEF_431C_8CDB_CFE996BF71FF_APP_P554801W_W554801WC_ECT0001_70"]').click()
-time.sleep(15)
-#clicar no Add
-click_add = ActionChains(driver)
-click_add.key_down(Keys.CONTROL)
-click_add.key_down(Keys.ALT)
-click_add.send_keys('A')
-click_add.key_up(Keys.CONTROL)
-click_add.key_up(Keys.ALT)
-click_add.perform()
-time.sleep(5)
-#clicar para importar
-click_imp = ActionChains(driver)
-click_imp.key_down(Keys.CONTROL)
-click_imp.key_down(Keys.SHIFT)
-click_imp.send_keys('I')
-click_imp.key_up(Keys.CONTROL)
-click_imp.key_up(Keys.SHIFT)
-click_imp.perform()
-time.sleep(10)
-#ação para Copiar os dados da planilha
-#enviar a tecla TAB 5 vezes
-for _ in range(5):
-                    tab5 = ActionChains(driver)
-                    tab5.send_keys(Keys.TAB).perform()
-time.sleep(1)
-#enviar tecla seta para baixo
-seta_down = ActionChains(driver)
-seta_down.send_keys(Keys.ARROW_DOWN).perform()
-time.sleep(1)
-#enviar a tecla TAB 1 vez
-tab1 = ActionChains(driver)
-tab1.send_keys(Keys.TAB).perform()
-time.sleep(1)
-#enviar tecla seta para baixo
-seta_down = ActionChains(driver)
-seta_down.send_keys(Keys.ARROW_DOWN).perform()
-time.sleep(1)
-#enviar a tecla TAB 1 vez
-tab1 = ActionChains(driver)
-tab1.send_keys(Keys.TAB).perform()
-time.sleep(1)
-#teclar A1
-pyautogui.write('A')
-time.sleep(1)
-tab1 = ActionChains(driver)
-tab1.send_keys(Keys.TAB).perform()
-time.sleep(1)
-pyautogui.write('1')
-time.sleep(1)
-tab1 = ActionChains(driver)
-tab1.send_keys(Keys.TAB).perform()
-time.sleep(1)
-#abrir a planilha de fechamento em lote
+# servico = Service(ChromeDriverManager().install())
 
-pyautogui.press('win')
-time.sleep(1)
-pyautogui.write('Documentos: ERPLOTE-teste.xlsx')
-time.sleep(5)
-pyautogui.press('enter')
-#copiar as células
+# navegador = webdriver.Chrome(service=servico)
 
-time.sleep(10)
-pyautogui.hotkey('winleft', 'up')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(2)
-pyautogui.moveTo(88, 238)
-pyautogui.click()
-time.sleep(1)
-pyautogui.keyDown('shift')
-time.sleep(1)
-pyautogui.moveTo(995, 319)
-pyautogui.click()
-time.sleep(1)
-pyautogui.keyUp('shift')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('winleft', 'down')
-time.sleep(1)
-pyautogui.hotkey('winleft', 'down')
-time.sleep(2)
-#colar as células no ERP
+credenciais_previas = {
+    "usuario": 80891950,
+    "senha": "Lucia24@@Keven20",
+}
 
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'alt', 'e')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'o')
-#acessar o atalho de interface via midia Magnética
+atalhos = {
+    "VisualizaçãoTXT": "listFav_8AB53D70_EFEF_431C_8CDB_CFE996BF71FF_APP_P554801W_W554801WC_ECT0001_50",
+    "botaoAdicionar": "hc_Add",
+    "botaoImportar": "jdehtmlImportData0_1",
+    "importar_area_transferencia": "clipBoardSettings",
+    "colar": "impOption",
+    "primeira_celula_da_grade": "PG_0.0",
+    "interface_via_midia_magnetica": "listFav_55EDEAD5_18FC_4EA3_85E1_B6068D6032CC_UBE_R584801W__ECT0001_60",
+}
 
-time.sleep(2)
-click_atalho = driver.find_element("xpath", '//*[@id="filter_tileImg_fav_55EDEAD5_18FC_4EA3_85E1_B6068D6032CC_UBE_R584801W__ECT0001_80"]').click()
-time.sleep(5)
-pyautogui.press('space')    
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'shift', 'u')
-time.sleep(2)
-#ação para Copiar os dados da planilha
-#enviar a tecla TAB 3 vezes
-for _ in range(3):
-                    tab3 = ActionChains(driver)
-                    tab3.send_keys(Keys.TAB).perform()
-time.sleep(2)
-pyautogui.press('l')
-time.sleep(1)
-pyautogui.write('80873138')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'alt', 'o')
-time.sleep(5)
-pyautogui.hotkey('ctrl', 'alt', 'o')
-time.sleep(5)
-pyautogui.hotkey('ctrl', 'alt', 'o')
-time.sleep(5)
-#inserir a descrição longa nas Ordens de Serviços
-   #excel e ERP
-   #OS numero 1
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('winleft', 'up')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('winleft', 'up')
-time.sleep(2)
-click_atalho = driver.find_element("xpath", '//*[@id="filter_tileImg_fav_B5F7BBBE_FD55_42A4_A5D4_AA04E3E2939A_APP_P5713700_W5713700A_MAN0001_50"]').click()
-time.sleep(5)
+ERP = "https://erp.correios.com.br"
+credencials_path = Path(__file__).parent  # .home() / "Credenciais"
 
-pyautogui.moveTo(93, 531)
-pyautogui.click()
-time.sleep(1)    
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(1)
-pyautogui.press('enter')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 's')
-time.sleep(5)
-pyautogui.moveTo(524, 543)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.press('up')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'right')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.moveTo(71, 596)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'l')
 
-#inserir a descrição longa nas Ordens de Serviços
-   #excel e ERP
-   #OS numero 2
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('winleft', 'up')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.moveTo(88, 528)
-pyautogui.click()
-time.sleep(0.1)
-pyautogui.click()
-time.sleep(1)
-pyautogui.press('del')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(1)
-pyautogui.press('enter')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 's')
-time.sleep(5)
-pyautogui.moveTo(524, 543)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'right')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.moveTo(71, 596)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'l')
+def carregar_credenciais(file_path: Path) -> dict:
+    """
+    Args:
+        file_path: Caminho do arquivo que contem as credenciais de acesso
 
-#inserir a descrição longa nas Ordens de Serviços
-   #excel e ERP
-   #OS numero 3
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('winleft', 'up')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.moveTo(88, 528)
-pyautogui.click()
-time.sleep(0.1)
-pyautogui.click()
-time.sleep(1)
-pyautogui.press('del')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(1)
-pyautogui.press('enter')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 's')
-time.sleep(5)
-pyautogui.moveTo(524, 543)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'home')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'right')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.press('down')
-time.sleep(1)
-pyautogui.hotkey('ctrl', 'c')
-time.sleep(1)
-pyautogui.hotkey('alt', 'tab')
-time.sleep(2)
-pyautogui.moveTo(71, 596)
-pyautogui.click()
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'v')
-time.sleep(2)
-pyautogui.hotkey('ctrl', 'alt', 'l')
+    Return:
+        dict:
+"""
+    with open(file_path / "credenciais.json", "r", encoding="utf-8") as file:
+        credenciais = json.load(file)
+    return credenciais
+
+
+def acesso_previo(navegador: webdriver.Chrome, credenciais: dict) -> None:
+    navegador.find_element(By.ID, "username").send_keys(credenciais["usuario"])
+    navegador.find_element(By.ID, "password").send_keys(credenciais["senha"])
+    navegador.find_element(By.CLASS_NAME, "botao-principal").click()
+
+
+def abrir_site(navegador: webdriver.Chrome, site: str) -> None:
+    navegador.get(site)
+
+
+def carregar_driver(navegador: webdriver.Chrome) -> None:  # type: ignore
+    """
+    Args:
+        navegador: instancia do navegador
+
+    Return:
+        Function
+    """
+    def interno(credenciais: dict) -> None:  # type: ignore
+        """
+        Args:
+            credenciais: dados do usuario para acesso ao site
+
+        Returns:
+            None
+        """
+        navegador.find_element(By.ID, "User").send_keys(credenciais["usuario"])
+        navegador.find_element(By.ID, "Password").send_keys(
+            credenciais["senha"])
+        navegador.find_element(By.CLASS_NAME, "buttonstylenormal").click()
+    return interno
+
+
+def visualizar_arquivo_importado(navegador: webdriver.Chrome) -> None:
+    """_summary_
+
+    Args:
+        navegador (webdriver.Chrome): _description_
+
+    Returns:
+        function: _description_
+    """
+    def interno(list_opcoes: list) -> None:
+        """_summary_
+
+        Args:
+            list_opcoes (list): _description_
+        """
+        for _, opcao in enumerate(list_opcoes):
+            print(opcao)
+            element = WebDriverWait(navegador, 60).until(
+                EC.visibility_of_element_located((By.ID, opcao))
+            )
+            if element.is_enabled():
+                print("Elemento visivel")
+                navegador.find_element(By.ID, opcao).click()
+            sleep(5)
+    return interno
+
+
+if __name__ == "__main__":
+    opcoes = atalhos.values()
+    drivers = webdriver.Chrome()
+    drivers.maximize_window()
+    abrir_site(drivers, ERP)
+    acessar_site = carregar_driver(drivers)
+    acessar_visualizacao = visualizar_arquivo_importado(drivers)
+    acesso_previo(drivers, credenciais_previas)
+    sleep(2)
+    acessar_site(carregar_credenciais(credencials_path))  # type: ignore
+    acessar_visualizacao(opcoes)  # type: ignore
+    sleep(5)
