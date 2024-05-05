@@ -16,7 +16,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 atalhos = {
     "VisualizaçãoTXT": "listFav_8AB53D70_EFEF_431C_8CDB_CFE996BF71FF_APP_P554801W_W554801WC_ECT0001_50",
-    "botaoAdicionar": "C0_53",  # "outer0_53",  # "hc_Add",
+    "botaoAdicionar": "outer0_53",  # "C0_53" ,  # "hc_Add",
     "botaoImportar": "jdehtmlImportData0_1",
     "importar_area_transferencia": "clipBoardSettings",
     "colar": "impOption",
@@ -48,7 +48,7 @@ def abrir_site(navegador: webdriver.Chrome, site: str) -> None:
     navegador.get(site)
 
 
-def carregar_driver(navegador: webdriver.Chrome) -> None:
+def carregar_driver(navegador: webdriver.Chrome):
     """_summary_
 
     Args:
@@ -71,7 +71,7 @@ def carregar_driver(navegador: webdriver.Chrome) -> None:
     return interno
 
 
-def visualizar_arquivo_importado(navegador: webdriver.Chrome) -> None:
+def visualizar_arquivo_importado(navegador: webdriver.Chrome):
     """
         _summary_
 
@@ -80,10 +80,10 @@ def visualizar_arquivo_importado(navegador: webdriver.Chrome) -> None:
     """
     def interno(list_opcoes: list[str]):
         for opcao in list_opcoes:
-            element = WebDriverWait(navegador, 60).until(
-                EC.visibility_of_element_located((By.ID, opcao))
-            )
             try:
+                element = WebDriverWait(navegador, 60).until(
+                    EC.visibility_of_element_located((By.ID, opcao))
+                )
                 navegador.find_element(By.ID, opcao).click()
                 print(f"O elemento: {opcao} foi alcançado")
             except TimeoutError:
