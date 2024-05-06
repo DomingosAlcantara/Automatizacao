@@ -58,6 +58,8 @@ class Automatizacao ():
         """
         self._navegador.get(url)
 
+    def acessar_opcao_visualizacao(self,)
+
 
 if __name__ == "__main__":
     ERP = "https://erp.correios.com.br"
