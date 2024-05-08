@@ -5,6 +5,7 @@ from pathlib import Path
 from time import sleep
 
 from selenium import webdriver
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -64,7 +65,7 @@ class Automatizacao ():
         self._navegador.maximize_window()
         self._navegador.get(url)
 
-    def elemento_visivel(self, elemento: str) -> bool:
+    def elemento_esta_visivel(self, elemento: str) -> bool:
         """_summary_
 
         Args:
@@ -87,11 +88,27 @@ class Automatizacao ():
         """
         sleep(self._tempo_de_espera)
         try:
-            if self.elemento_visivel(opcao):
+            if self.elemento_esta_visivel(opcao):
                 print("Elemento encontrado")
                 self._navegador.find_element(By.ID, opcao).click()
         except TimeoutError:
             print(f"O Item {opcao} não pode ser alcançado")
+
+    def adicionar(self) -> None:
+        """_summary_
+        """
+        sleep(self._tempo_de_espera)
+        ActionChains(self._navegador).key_down(Keys.CONTROL)\
+            .key_down(Keys.ALT).send_keys("A").key_up(Keys.CONTROL)\
+            .key_up(Keys.ALT).perform()
+
+    def importar(self) -> None:
+        """_summary_
+        """
+        sleep(self._tempo_de_espera)
+        ActionChains(self._navegador).key_down(Keys.CONTROL)\
+            .key_down(Keys.SHIFT).send_keys("I").key_up(Keys.CONTROL)\
+            .key_up(Keys.SHIFT).perform()
 
 
 if __name__ == "__main__":
