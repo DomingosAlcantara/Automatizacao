@@ -5,7 +5,8 @@ from pathlib import Path
 from time import sleep
 
 from selenium import webdriver
-from selenium.webdriver import Keys, ActionChains
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -110,6 +111,26 @@ class Automatizacao ():
             .key_down(Keys.SHIFT).send_keys("I").key_up(Keys.CONTROL)\
             .key_up(Keys.SHIFT).perform()
 
+    def importar_da_area_de_transferencia(self, opcao: str) -> None:
+        """_summary_
+        """
+        sleep(self._tempo_de_espera)
+        try:
+            print(f"Selecionando o item: {opcao}")
+            self._navegador.find_element(By.XPATH, opcao).click()
+        except TimeoutException:
+            print(f"O Item: {opcao} - não pode ser alcançado")
+        except NoSuchElementException:
+            print(f"O Item: {opcao} - não pode ser alcançado")
+
+    def colar_da_area_de_transferencia(self, opcao) -> None:
+        """_summary_
+        """
+        try:
+            self._navegador.find_element(By.XPATH, opcao).click()
+        except TimeoutError:
+            print(f"O Item: {opcao} - não pode ser alcançado")
+
 
 if __name__ == "__main__":
     ERP = "https://erp.correios.com.br"
@@ -120,4 +141,10 @@ if __name__ == "__main__":
     automatizacao.abrir_url(ERP)
     automatizacao.logar(automatizacao.definir_credenciais(credencials_path))
     automatizacao.acessar_opcao_visualizacao(opcoes_auto.visualizarTXT)
+    automatizacao.adicionar()
+    automatizacao.importar()
+    automatizacao.importar_da_area_de_transferencia(
+        opcoes_auto.botao_area_de_transferencia
+    )
+    # automatizacao.colar_da_area_de_transferencia(opcoes_auto.colar)
     sleep(20)
