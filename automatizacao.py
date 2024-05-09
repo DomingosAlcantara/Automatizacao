@@ -5,7 +5,6 @@ from pathlib import Path
 from time import sleep
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -90,7 +89,6 @@ class Automatizacao ():
         sleep(self._tempo_de_espera)
         try:
             if self.elemento_esta_visivel(opcao):
-                print("Elemento encontrado")
                 self._navegador.find_element(By.ID, opcao).click()
         except TimeoutError:
             print(f"O Item {opcao} não pode ser alcançado")
@@ -111,25 +109,35 @@ class Automatizacao ():
             .key_down(Keys.SHIFT).send_keys("I").key_up(Keys.CONTROL)\
             .key_up(Keys.SHIFT).perform()
 
-    def importar_da_area_de_transferencia(self, opcao: str) -> None:
+    def importar_da_area_de_transferencia(self) -> None:
         """_summary_
         """
         sleep(self._tempo_de_espera)
-        try:
-            print(f"Selecionando o item: {opcao}")
-            self._navegador.find_element(By.XPATH, opcao).click()
-        except TimeoutException:
-            print(f"O Item: {opcao} - não pode ser alcançado")
-        except NoSuchElementException:
-            print(f"O Item: {opcao} - não pode ser alcançado")
+        for _ in range(5):
+            ActionChains(self._navegador).send_keys(Keys.TAB).perform()
 
-    def colar_da_area_de_transferencia(self, opcao) -> None:
+        ActionChains(self._navegador).send_keys(Keys.ARROW_DOWN).perform()
+
+    def colar_da_area_de_transferencia(self) -> None:
         """_summary_
         """
-        try:
-            self._navegador.find_element(By.XPATH, opcao).click()
-        except TimeoutError:
-            print(f"O Item: {opcao} - não pode ser alcançado")
+        sleep(self._tempo_de_espera)
+        ActionChains(self._navegador).send_keys(Keys.TAB)\
+            .send_keys(Keys.ARROW_DOWN).perform()
+
+    def informar_campos(self) -> None:
+        """_summary_
+        """
+        ActionChains(self._navegador).send_keys(Keys.TAB)\
+            .send_keys("A").perform()
+        ActionChains(self._navegador).send_keys(Keys.TAB)\
+            .send_keys("1").perform()
+
+    def selecionar_campo_na_grade(self) -> None:
+        """_summary_
+        """
+        ActionChains(self._navegador).send_keys(Keys.TAB).send_keys(Keys.TAB)\
+            .perform()
 
 
 if __name__ == "__main__":
@@ -143,8 +151,9 @@ if __name__ == "__main__":
     automatizacao.acessar_opcao_visualizacao(opcoes_auto.visualizarTXT)
     automatizacao.adicionar()
     automatizacao.importar()
-    automatizacao.importar_da_area_de_transferencia(
-        opcoes_auto.botao_area_de_transferencia
-    )
-    # automatizacao.colar_da_area_de_transferencia(opcoes_auto.colar)
+    automatizacao.importar_da_area_de_transferencia()
+    automatizacao.colar_da_area_de_transferencia()
+    automatizacao.informar_campos()
+    automatizacao.selecionar_campo_na_grade()
+
     sleep(20)
