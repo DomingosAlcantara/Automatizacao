@@ -1,6 +1,7 @@
 .vscode/
 fechamento-OS/
-automatizacao_casa.py
+app.py
+credenciais.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -4,20 +4,18 @@ import json
 from pathlib import Path
 from time import sleep
 
-from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
-from opcoes import Opcoes
 
 
 class Automatizacao ():
     """_summary_
     """
 
-    def __init__(self, navegador: webdriver.Chrome,
+    def __init__(self, navegador: Chrome,
                  tempo_de_espera: int = 5) -> None:
         self._navegador = navegador
         self._credenciais = None
@@ -139,21 +137,5 @@ class Automatizacao ():
         ActionChains(self._navegador).send_keys(Keys.TAB).send_keys(Keys.TAB)\
             .perform()
 
-
-if __name__ == "__main__":
-    ERP = "https://erp.correios.com.br"
-    credencials_path = Path(__file__).parent  # .home() / "Credenciais"
-    opcoes_auto = Opcoes()
-
-    automatizacao = Automatizacao(webdriver.Chrome())
-    automatizacao.abrir_url(ERP)
-    automatizacao.logar(automatizacao.definir_credenciais(credencials_path))
-    automatizacao.acessar_opcao_visualizacao(opcoes_auto.visualizarTXT)
-    automatizacao.adicionar()
-    automatizacao.importar()
-    automatizacao.importar_da_area_de_transferencia()
-    automatizacao.colar_da_area_de_transferencia()
-    automatizacao.informar_campos()
-    automatizacao.selecionar_campo_na_grade()
-
-    sleep(20)
+    def sair(self) -> None:
+        self._navegador.quit()

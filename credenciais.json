@@ -1,4 +1,10 @@
 {
-  "usuario": 80891950,
-  "senha": "Lucia24Keven20"
+  "credenciais_erp": {
+    "usuario": 80891950,
+    "senha": "Lucia24Keven20"
+  },
+  "credenciais_shared_point": {
+    "email": "domingos.jesus@correios.com.br",
+    "senha": "Lucia24@@Keven20"
+  }
 }
