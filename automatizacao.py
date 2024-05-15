@@ -21,7 +21,8 @@ class Automatizacao ():
         self._credenciais = None
         self._tempo_de_espera = tempo_de_espera
 
-    def definir_credenciais(self, path_credenciais: Path) -> dict[str, str]:
+    def definir_credenciais(self, path_credenciais: Path) \
+            -> dict[dict[str, str], dict[str, str]]:
         """Método para carregar os dados de login
 
         Args:
@@ -29,7 +30,7 @@ class Automatizacao ():
             as credenciais
 
         Returns:
-            dict: Dicionario com nome de usuario e senha
+            tuple: Dicionario com nome de usuario e senha
         """
         with open(path_credenciais / "credenciais.json", "r",
                   encoding="utf-8"
@@ -39,17 +40,18 @@ class Automatizacao ():
 
         return credenciais
 
-    def logar(self, credenciais: dict[str, str]) -> None:
+    def logar(self, credenciais: tuple[str, str]) -> None:
         """_summary_
 
         Args:
-            credenciais (dict): _description_
+            credenciais (tuple): _description_
         """
+        usuario, senha = credenciais
         self._navegador.find_element(By.ID, "User")\
-            .send_keys(credenciais["usuario"])
+            .send_keys(usuario)
 
         self._navegador.find_element(By.ID, "Password")\
-            .send_keys(credenciais["senha"])
+            .send_keys(senha)
 
         self._navegador.find_element(By.CLASS_NAME,
                                      "buttonstylenormal").click()
